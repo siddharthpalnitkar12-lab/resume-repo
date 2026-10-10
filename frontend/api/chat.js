@@ -9,10 +9,25 @@ const SYSTEM_PROMPT =
   "not in the resume, say so and suggest emailing him. Never invent facts. Never share a phone number or home address. " +
   "Politely decline unrelated requests.\n\nRESUME:\n" + resume;
 
+// Best-effort per-IP limit; shared only within a warm Vercel instance.
+const LIMIT = Number(process.env.CHAT_LIMIT_PER_HOUR) || 20;
+const hits = new Map();
+function rateLimit(ip) {
+  const now = Date.now();
+  const list = (hits.get(ip) || []).filter((t) => now - t < 3600000);
+  if (list.length >= LIMIT) { hits.set(ip, list); return Math.ceil((3600000 - (now - list[0])) / 60000); }
+  list.push(now);
+  hits.set(ip, list);
+  return 0;
+}
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
   const key = process.env.OPENAI_API_KEY;
   if (!key) return res.status(503).json({ error: "AI chat not configured" });
+  const ip = String(req.headers["x-real-ip"] || req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "").split(",")[0].trim();
+  const wait = rateLimit(ip);
+  if (wait) return res.status(429).json({ error: "limit", limit: LIMIT, retry_after_minutes: wait });
 
   const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
   const message = String(body.message || "").trim().slice(0, 500);

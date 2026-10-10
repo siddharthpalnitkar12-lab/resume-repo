@@ -12,6 +12,7 @@ User choices: content from uploaded PDF; chat widget (keyword matching, no AI ke
 
 ## Implemented (2026-10-10)
 - Recruiter "Why hire Siddharth?" hero button + chat chip → opens chat and asks AI for a short pitch (keyword fallback pitch included), with "Copy pitch" and "Email this pitch" (mailto draft with pitch + contact links) buttons on pitch replies.
+- Chat usage limit: CHAT_LIMIT_PER_HOUR (20) per visitor IP on FastAPI (backend/.env) and Vercel fn (env, default 20; per warm instance only). 429 → browser remembers block in localStorage, shows one note and falls back to keyword answers.
 - AI chat: POST /api/chat streams plain text. Preview = FastAPI + Emergent key (gpt-5.6-terra); Vercel = frontend/api/chat.js using OPENAI_API_KEY (optional OPENAI_MODEL). Falls back to keyword answers on error. Frontend calls same-origin /api/chat.
 - Hero with masked line reveal + 3D tilt/parallax image, bot-readable bar, marquee, About/Objective, Academics, Skills bento, Contact (email + LinkedIn only), Ask-my-resume chat widget, SP monogram favicon.
 

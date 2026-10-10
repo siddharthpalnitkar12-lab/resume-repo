@@ -1,5 +1,5 @@
-from fastapi import FastAPI, APIRouter, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi import FastAPI, APIRouter, HTTPException, Request
+from fastapi.responses import StreamingResponse, JSONResponse
 from emergentintegrations.llm.chat import LlmChat, UserMessage, TextDelta, StreamDone
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -10,6 +10,8 @@ from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List
 import uuid
+import time
+from collections import defaultdict, deque
 from datetime import datetime, timezone
 
 
@@ -87,11 +89,32 @@ class ChatRequest(BaseModel):
     history: List[ChatTurn] = Field(default_factory=list, max_length=12)
 
 
+CHAT_LIMIT = int(os.environ["CHAT_LIMIT_PER_HOUR"])
+chat_hits = defaultdict(deque)
+
+
+def rate_limit(ip: str):
+    now = time.time()
+    q = chat_hits[ip]
+    while q and now - q[0] > 3600:
+        q.popleft()
+    if len(q) >= CHAT_LIMIT:
+        return max(1, int((3600 - (now - q[0])) // 60) + 1)
+    q.append(now)
+    return 0
+
+
 @api_router.post("/chat")
-async def chat(req: ChatRequest):
+async def chat(req: ChatRequest, request: Request):
     key = os.environ.get("EMERGENT_LLM_KEY")
     if not key:
         raise HTTPException(503, "AI chat not configured")
+    hops = [h.strip() for h in (request.headers.get("x-forwarded-for") or "").split(",") if h.strip()]
+    # Ingress appends client, Cloudflare and LB hops; earlier entries are client-supplied.
+    ip = hops[-3] if len(hops) >= 3 else (hops[0] if hops else (request.client.host if request.client else ""))
+    wait = rate_limit(ip)
+    if wait:
+        return JSONResponse({"error": "limit", "limit": CHAT_LIMIT, "retry_after_minutes": wait}, status_code=429)
     convo = "\n".join(f"{'Visitor' if t.role == 'user' else 'Assistant'}: {t.text}" for t in req.history[-6:])
     prompt = (f"Conversation so far:\n{convo}\n\n" if convo else "") + f"Visitor: {req.message}"
     llm = LlmChat(api_key=key, session_id=str(uuid.uuid4()), system_message=SYSTEM_PROMPT).with_model("openai", "gpt-5.6-terra")

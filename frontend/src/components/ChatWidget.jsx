@@ -33,18 +33,19 @@ export const ChatWidget = () => {
   const ask = async (q) => {
     const text = q.trim();
     if (!text || typing) return;
-    const history = msgs.slice(1).map((m) => ({ role: m.from === "user" ? "user" : "assistant", text: m.text }));
+    const history = msgs.slice(1).filter((m) => m.from !== "note").map((m) => ({ role: m.from === "user" ? "user" : "assistant", text: m.text }));
     setMsgs((m) => [...m, { from: "user", text }]);
     setInput("");
     setTyping(true);
-    const reply = await streamChat(text, history, (partial) => {
+    const { text: reply, retryMin } = await streamChat(text, history, (partial) => {
       setTyping(false);
       setMsgs((m) => (m[m.length - 1]?.streaming ? [...m.slice(0, -1), { from: "bot", text: partial, streaming: true }] : [...m, { from: "bot", text: partial, streaming: true }]));
     });
     setTyping(false);
     setMsgs((m) => {
       const base = m[m.length - 1]?.streaming ? m.slice(0, -1) : m;
-      return [...base, { from: "bot", text: reply || answer(text), pitch: isPitch(text) }];
+      const out = [...base, { from: "bot", text: reply || answer(text), pitch: isPitch(text) }];
+      return retryMin && !m.some((x) => x.from === "note") ? [...out, { from: "note", text: `You've reached the hourly limit for AI answers, so I'm showing quick answers from the resume. AI answers return in about ${retryMin} min.` }] : out;
     });
   };
   askRef.current = ask;
@@ -73,7 +74,7 @@ export const ChatWidget = () => {
             <div className="flex-1 overflow-y-auto p-4 space-y-3" data-testid="chat-messages">
               {msgs.map((m, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                  className={`max-w-[85%] text-sm leading-relaxed px-4 py-3 ${m.from === "user" ? "ml-auto bg-ink text-[#FBF9F5]" : "bg-[#EFEAE0]"}`}
+                  className={`max-w-[85%] text-sm leading-relaxed px-4 py-3 ${m.from === "user" ? "ml-auto bg-ink text-[#FBF9F5]" : m.from === "note" ? "max-w-full border border-dashed border-[#B83A24] text-[#942C1B] text-xs" : "bg-[#EFEAE0]"}`}
                   data-testid={`chat-message-${m.from}`}>
                   {m.text}
                   {m.pitch && <CopyPitch text={m.text} />}
