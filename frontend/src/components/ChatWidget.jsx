@@ -13,8 +13,14 @@ export const ChatWidget = () => {
   const [typing, setTyping] = useState(false);
   const endRef = useRef(null);
 
+  const askRef = useRef(null);
+
   useEffect(() => {
-    const o = () => setOpen(true);
+    const o = (e) => {
+      setOpen(true);
+      const q = e.detail?.question;
+      if (q) setTimeout(() => askRef.current?.(q), 350);
+    };
     window.addEventListener("open-chat", o);
     return () => window.removeEventListener("open-chat", o);
   }, []);
@@ -38,6 +44,7 @@ export const ChatWidget = () => {
       return [...base, { from: "bot", text: reply || answer(text) }];
     });
   };
+  askRef.current = ask;
 
   return (
     <>

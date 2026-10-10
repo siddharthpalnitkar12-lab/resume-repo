@@ -1,6 +1,7 @@
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
-import { MessageSquareText, ArrowDownToLine } from "lucide-react";
+import { MessageSquareText, ArrowDownToLine, Sparkles } from "lucide-react";
 import { resume as r } from "@/data/resume";
+import { PITCH_QUESTION } from "@/lib/chatEngine";
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -61,6 +62,10 @@ export const Hero = () => (
         </motion.p>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 1, ease }}
           className="mt-10 flex flex-wrap gap-3">
+          <button data-testid="hero-why-hire-button" onClick={() => window.dispatchEvent(new CustomEvent("open-chat", { detail: { question: PITCH_QUESTION } }))}
+            className="group inline-flex items-center gap-2 bg-accent text-[#FBF9F5] rounded-full px-6 py-3.5 text-sm hover:bg-[#942C1B] transition-colors">
+            <Sparkles size={16} className="transition-transform group-hover:rotate-12" /> Why hire Siddharth?
+          </button>
           <button data-testid="hero-ask-button" onClick={() => window.dispatchEvent(new Event("open-chat"))}
             className="group inline-flex items-center gap-2 bg-ink text-[#FBF9F5] rounded-full px-6 py-3.5 text-sm hover:bg-[#B83A24] transition-colors">
             <MessageSquareText size={16} className="transition-transform group-hover:-rotate-12" /> Ask my resume

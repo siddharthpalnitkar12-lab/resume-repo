@@ -3,6 +3,7 @@ import { resume as r } from "@/data/resume";
 const list = (a) => a.join(", ");
 
 const intents = [
+  { keys: ["hire", "pitch", "why should", "good fit", "recruit"], answer: `Why hire Siddharth? He is a PGDM student at IMDR Pune specializing in finance and marketing, bringing working knowledge of ${list(r.knowledge).toLowerCase()} alongside strengths in ${list(r.competencies).toLowerCase()}. With a strong academic record (8.67 CGPA in graduation), hands-on ${list(r.technical.slice(0, 2))} skills and fluency in ${list(r.languages)}, he is ready to contribute to a finance or marketing internship. Reach him at ${r.email}.` },
   { keys: ["contact", "email", "reach", "hire", "linkedin", "connect", "mail"], answer: `You can reach Siddharth at ${r.email} or on LinkedIn: ${r.linkedin}` },
   { keys: ["educat", "study", "studies", "degree", "college", "universit", "pgdm", "academ", "cgpa", "grade", "score", "hsc", "ssc", "school", "qualif"], answer: r.academics.map((a) => `${a.course} (${a.year}) — ${a.institute}${a.score !== "—" ? `, ${a.score}` : ""}`).join(" · ") },
   { keys: ["skill", "excel", "powerpoint", "tool", "software", "technical"], answer: `Technical skills: ${list(r.technical)}. Core competencies: ${list(r.competencies)}. Knowledge areas: ${list(r.knowledge)}.` },
@@ -16,7 +17,10 @@ const intents = [
   { keys: ["hello", "hey", "who", "about", "tell me", "summary"], answer: `${r.name} is a ${r.headline} at ${r.institute}. ${r.about}` },
 ];
 
+export const PITCH_QUESTION = "Why should a recruiter hire Siddharth? Give a short, persuasive pitch.";
+
 export const suggestions = [
+  "Why hire Siddharth?",
   "What is Siddharth studying?",
   "What are his skills?",
   "What role is he looking for?",
