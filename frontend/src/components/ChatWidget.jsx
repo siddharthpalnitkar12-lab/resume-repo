@@ -76,7 +76,7 @@ export const ChatWidget = () => {
                   className={`max-w-[85%] text-sm leading-relaxed px-4 py-3 ${m.from === "user" ? "ml-auto bg-ink text-[#FBF9F5]" : "bg-[#EFEAE0]"}`}
                   data-testid={`chat-message-${m.from}`}>
                   {m.text}
-                  {m.pitch && <div><CopyPitch text={m.text} /></div>}
+                  {m.pitch && <CopyPitch text={m.text} />}
                 </motion.div>
               ))}
               {typing && <div className="dot-blink bg-[#EFEAE0] w-16 px-4 py-3 flex gap-1" data-testid="chat-typing"><span>●</span><span>●</span><span>●</span></div>}
