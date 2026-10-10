@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquareText, X, ArrowUp } from "lucide-react";
-import { answer, suggestions } from "@/lib/chatEngine";
+import { answer, suggestions, PITCH_QUESTION } from "@/lib/chatEngine";
 import { streamChat } from "@/lib/aiChat";
+import { CopyPitch } from "@/components/CopyPitch";
+
+const isPitch = (q) => q === PITCH_QUESTION || /why (should .*)?hire/i.test(q);
 
 const hello = { from: "bot", text: "Hi! I'm Siddharth's resume assistant. Ask me about his education, skills, goals or how to reach him." };
 
@@ -41,7 +44,7 @@ export const ChatWidget = () => {
     setTyping(false);
     setMsgs((m) => {
       const base = m[m.length - 1]?.streaming ? m.slice(0, -1) : m;
-      return [...base, { from: "bot", text: reply || answer(text) }];
+      return [...base, { from: "bot", text: reply || answer(text), pitch: isPitch(text) }];
     });
   };
   askRef.current = ask;
@@ -73,6 +76,7 @@ export const ChatWidget = () => {
                   className={`max-w-[85%] text-sm leading-relaxed px-4 py-3 ${m.from === "user" ? "ml-auto bg-ink text-[#FBF9F5]" : "bg-[#EFEAE0]"}`}
                   data-testid={`chat-message-${m.from}`}>
                   {m.text}
+                  {m.pitch && <div><CopyPitch text={m.text} /></div>}
                 </motion.div>
               ))}
               {typing && <div className="dot-blink bg-[#EFEAE0] w-16 px-4 py-3 flex gap-1" data-testid="chat-typing"><span>●</span><span>●</span><span>●</span></div>}
