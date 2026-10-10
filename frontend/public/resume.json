@@ -1,0 +1,35 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Siddharth Palnitkar",
+    "label": "PGDM Student - Finance & Marketing",
+    "email": "siddharthpalnitkar12@gmail.com",
+    "summary": "PGDM student specializing in finance and marketing with knowledge in taxation, accounting and legal processes. Seeking an internship opportunity in finance and marketing.",
+    "location": { "city": "Pune", "countryCode": "IN" },
+    "profiles": [
+      { "network": "LinkedIn", "url": "https://www.linkedin.com/in/siddharth-palnitkar-828ab7418/" }
+    ]
+  },
+  "education": [
+    { "institution": "Institute of Management Development & Research (IMDR), Pune", "studyType": "PGDM", "area": "Finance and Marketing", "endDate": "2028" },
+    { "institution": "Savitribai Phule Pune University", "studyType": "Graduation", "endDate": "2023", "score": "8.67 CGPA" },
+    { "institution": "Garware College of Commerce and Science", "studyType": "HSC", "endDate": "2020", "score": "75%" },
+    { "institution": "Andhra High School", "studyType": "SSC", "endDate": "2016", "score": "72%" }
+  ],
+  "skills": [
+    { "name": "Technical", "keywords": ["MS Excel", "MS PowerPoint", "Market Research"] },
+    { "name": "Competencies", "keywords": ["Market Research", "Problem Solving", "Strategic Planning"] },
+    { "name": "Knowledge", "keywords": ["Taxation", "Accounting", "Legal Processes"] }
+  ],
+  "languages": [
+    { "language": "English" },
+    { "language": "Hindi" },
+    { "language": "Marathi" }
+  ],
+  "interests": [
+    { "name": "Cricket & Football" },
+    { "name": "Business & Market Trends" },
+    { "name": "Fitness" },
+    { "name": "Travelling" }
+  ]
+}

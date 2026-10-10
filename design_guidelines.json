@@ -1,0 +1,168 @@
+{
+  "project_metadata": {
+    "name": "Chatbot-Readable Editorial Resume & Interactive Portfolio",
+    "style_archetype": "Swiss Editorial Minimalist & Technical Clarity",
+    "target_framework": "React (CRA) + Tailwind CSS + Framer Motion + Lenis",
+    "theme_mode": "Dual (Default Light Warm Paper `#FBF9F5` with Dark Charcoal Obsidian `#0D0E10` Toggle)",
+    "file_type_notice": "JavaScript files (.js / .jsx) used in this repository"
+  },
+  "design_principles": {
+    "fusion": "Swiss poster typographic grid meets high-fashion editorial layout and AI-crawler machine readability",
+    "emotion": "Intellectual rigor, architectural precision, tactile paper texture, effortless transparency",
+    "content_storytelling": "Every section is an editorial column with metadata callouts, line reveals, and machine-first structured data",
+    "negative_space": "Generous vertical gaps (py-24 to py-36), deliberate asymmetric borders, zero clutter",
+    "contrast": "Stark contrast ink against warm paper tone, 1px geometric grid rules, single vivid crimson accent"
+  },
+  "typography": {
+    "heading_font": "Playfair Display, serif",
+    "body_font": "Plus Jakarta Sans, sans-serif",
+    "mono_font": "JetBrains Mono, monospace",
+    "hierarchy": {
+      "h1_hero": "text-4xl sm:text-6xl lg:text-7xl font-serif tracking-tight leading-[1.05]",
+      "h2_section": "text-2xl sm:text-4xl font-serif tracking-tight leading-snug",
+      "h3_card": "text-xl sm:text-2xl font-serif font-medium",
+      "subtitle": "text-base sm:text-lg text-neutral-600 dark:text-neutral-400 font-sans leading-relaxed",
+      "meta_mono": "text-xs font-mono uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400",
+      "body": "text-base font-sans text-neutral-800 dark:text-neutral-200 leading-relaxed"
+    }
+  },
+  "color_palette": {
+    "light": {
+      "bg_paper": "#FBF9F5",
+      "bg_card": "#F4F0E8",
+      "bg_elevated": "#FFFFFF",
+      "border_subtle": "#E5DFD3",
+      "border_strong": "#111113",
+      "text_primary": "#111113",
+      "text_secondary": "#5C5955",
+      "text_muted": "#8A857D",
+      "accent_crimson": "#B83A24",
+      "accent_hover": "#942C1B",
+      "chat_bg": "#F4F0E8",
+      "chat_bubble_bot": "#EFEAE0",
+      "chat_bubble_user": "#111113"
+    },
+    "dark": {
+      "bg_paper": "#0D0E10",
+      "bg_card": "#16181C",
+      "bg_elevated": "#1E2127",
+      "border_subtle": "#2A2E37",
+      "border_strong": "#FBF9F5",
+      "text_primary": "#FBF9F5",
+      "text_secondary": "#A0A5B1",
+      "text_muted": "#6C7280",
+      "accent_crimson": "#E54D32",
+      "accent_hover": "#FF6046",
+      "chat_bg": "#16181C",
+      "chat_bubble_bot": "#222630",
+      "chat_bubble_user": "#FBF9F5"
+    }
+  },
+  "key_features_and_bot_readability": {
+    "semantic_html": "Semantic tags (<header>, <main>, <article>, <section>, <aside>, <footer>) enriched with microdata and aria-labels for LLM scapes.",
+    "json_ld_schema": "Embedded <script type=\"application/ld+json\"> containing Person, JobPosting, ProfilePage, and ContactPoint schema.",
+    "llms_txt_exporter": "Accessible raw route & downloadable file at `/llms.txt` and modal view containing full markdown prompt-engineered resume.",
+    "resume_json": "Standardized JSON Resume schema format available at `/resume.json` and via download link.",
+    "plain_text_download": "Direct button to download `.txt` version optimized for ATS and AI crawlers.",
+    "ask_my_resume_chat": {
+      "type": "Interactive client-side floating drawer / modal widget",
+      "engine": "Keyword & Intent matching engine (fast, zero external API key needed, natural typing animation)",
+      "suggested_questions": [
+        "What is Alex's background in full-stack architecture?",
+        "What AI and Machine Learning tools does Alex specialize in?",
+        "Where has Alex worked and what were key impact metrics?",
+        "How can I contact Alex for a lead role?"
+      ],
+      "data_source": "Structured resume knowledge graph with multi-keyword fallback"
+    }
+  },
+  "layout_sections": [
+    {
+      "id": "header_nav",
+      "component": "EditorialHeader",
+      "description": "Sticky minimal header with Lenis smooth jump links, theme toggle, Monogram logo, and AI Crawler Links dropdown"
+    },
+    {
+      "id": "hero",
+      "component": "EditorialHero",
+      "description": "Kinetic typography reveal, masked line-by-line load animation, 3D Monogram interactive tilt canvas, status indicator ('Available for Staff/Lead roles'), and quick actions"
+    },
+    {
+      "id": "bot_bar",
+      "component": "BotAccessibilityBar",
+      "description": "High-visibility technical bar spotlighting LLM readiness: links to llms.txt, resume.json, raw txt, and schema modal"
+    },
+    {
+      "id": "editorial_marquee",
+      "component": "EditorialMarquee",
+      "description": "Slow drifting text ribbon with low contrast typography & dot separators highlight core competencies"
+    },
+    {
+      "id": "about",
+      "component": "AboutSection",
+      "description": "Two-column editorial split with portrait, philosophy statement, quick stat counters, and core principles"
+    },
+    {
+      "id": "experience",
+      "component": "ExperienceTimeline",
+      "description": "Interactive chronological timeline with expandable detail panels, tech stack tags, and quantifiable achievements"
+    },
+    {
+      "id": "skills",
+      "component": "SkillsMatrix",
+      "description": "Bento grid matrix categorizing System Architecture, Modern Frontend, Backend/Cloud, and AI Systems with proficiency bars"
+    },
+    {
+      "id": "projects",
+      "component": "ProjectsSection",
+      "description": "Editorial project showcases with preview cards, key metrics, GitHub repo links, live demo links, and tech pills"
+    },
+    {
+      "id": "education_certifications",
+      "component": "EducationSection",
+      "description": "Degrees, certifications, publications, and continuous learning log in Swiss grid style"
+    },
+    {
+      "id": "contact",
+      "component": "ContactSection",
+      "description": "Clean contact hub featuring Email, LinkedIn, GitHub, and message copy helper. STRICTLY NO phone number or residential address."
+    },
+    {
+      "id": "chat_widget",
+      "component": "AskResumeWidget",
+      "description": "Floating action button triggering an AI-styled 'Ask My Resume' chat assistant with instant answers and suggestions"
+    }
+  ],
+  "image_urls": {
+    "profile_portrait": "https://images.unsplash.com/photo-1616469681121-a560851f89fa?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwyfHxtaW5pbWFsaXN0JTIwZWRpdG9yaWFsJTIwcG9ydHJhaXQlMjBwcm9mZXNzaW9uYWwlMjBjcmVhdGl2ZSUyMGRldmVsb3BlcnxlbnwwfHx8fDE3OTE2NDkzNjJ8MA&ixlib=rb-4.1.0&q=85",
+    "workspace_hero": "https://images.unsplash.com/photo-1449247709967-d4461a6a6103?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHwxfHxtaW5pbWFsaXN0JTIwd29ya3NwYWNlfGVufDB8fHx8MTc5MTY0OTM3MXww&ixlib=rb-4.1.0&q=85",
+    "workspace_desk": "https://images.unsplash.com/photo-1587522384446-64daf3e2689a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHwyfHxtaW5pbWFsaXN0JTIwd29ya3NwYWNlfGVufDB8fHx8MTc5MTY0OTM3MXww&ixlib=rb-4.1.0&q=85"
+  },
+  "testing_and_data_testids": {
+    "header_nav": "nav-header",
+    "theme_toggle": "theme-toggle-button",
+    "hero_section": "hero-section",
+    "hero_name": "hero-name-title",
+    "download_txt_btn": "download-txt-resume-button",
+    "view_llms_txt_btn": "view-llms-txt-button",
+    "view_resume_json_btn": "view-resume-json-button",
+    "chat_widget_toggle": "ask-resume-chat-toggle",
+    "chat_input": "ask-resume-chat-input",
+    "chat_submit": "ask-resume-chat-submit",
+    "chat_suggested_q": "chat-suggested-question-item",
+    "experience_item": "experience-timeline-item",
+    "skill_badge": "skill-category-badge",
+    "project_card": "project-showcase-card",
+    "contact_email_link": "contact-email-link",
+    "contact_linkedin_link": "contact-linkedin-link",
+    "contact_github_link": "contact-github-link"
+  },
+  "instructions_to_main_agent": [
+    "Ensure Lenis smooth scroll initializes on mount and handles hash links smoothly.",
+    "Provide modal/viewers for llms.txt, resume.json, and structured JSON-LD preview so reviewers can immediately test machine readability.",
+    "Implement the Ask My Resume floating widget with responsive mobile sheet support, typing indicator effect, and preset quick-click questions.",
+    "Keep privacy strict: Email (alex.vance.dev@gmail.com), LinkedIn (linkedin.com/in/alexvance-dev), and GitHub (github.com/alexvance-dev). DO NOT add phone number or physical address anywhere.",
+    "Make sure all interactive elements carry data-testid attributes for E2E automated testing.",
+    "Add fallback plain content visible even if JavaScript animations are slow or prefers-reduced-motion is active."
+  ]
+}

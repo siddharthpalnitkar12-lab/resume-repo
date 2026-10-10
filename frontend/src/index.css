@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #FBF9F5;
+  --card: #F4F0E8;
+  --rule: #E5DFD3;
+  --ink: #111113;
+  --ink-2: #5C5955;
+  --accent: #B83A24;
+}
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent); color: var(--paper); }
+
+.f-serif { font-family: "Playfair Display", serif; }
+.f-mono { font-family: "JetBrains Mono", monospace; }
+.meta { font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2); }
+.wrap { max-width: 1320px; margin: 0 auto; padding-left: 1.25rem; padding-right: 1.25rem; }
+@media (min-width: 768px) { .wrap { padding-left: 2.5rem; padding-right: 2.5rem; } }
+.rule { border-color: var(--rule); }
+.accent { color: var(--accent); }
+.bg-accent { background: var(--accent); }
+.bg-card { background: var(--card); }
+.bg-ink { background: var(--ink); }
+.ink-2 { color: var(--ink-2); }
+
+[data-debug-wrapper="true"] { display: contents !important; }
