@@ -81,5 +81,8 @@ memory/test_credentials.md
 # Mobile development
 android-sdk/
 
+# Secrets
+backend/.env
+
 # overlay black-box crash/user-report dumps — session data, never history
 **/.emergent/recordings/

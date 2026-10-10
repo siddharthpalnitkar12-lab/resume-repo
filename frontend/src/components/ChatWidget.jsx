@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquareText, X, ArrowUp } from "lucide-react";
 import { answer, suggestions } from "@/lib/chatEngine";
+import { streamChat } from "@/lib/aiChat";
 
 const hello = { from: "bot", text: "Hi! I'm Siddharth's resume assistant. Ask me about his education, skills, goals or how to reach him." };
 
@@ -20,13 +21,22 @@ export const ChatWidget = () => {
 
   useEffect(() => { endRef.current?.scrollIntoView({ block: "end" }); }, [msgs, typing]);
 
-  const ask = (q) => {
+  const ask = async (q) => {
     const text = q.trim();
     if (!text || typing) return;
+    const history = msgs.slice(1).map((m) => ({ role: m.from === "user" ? "user" : "assistant", text: m.text }));
     setMsgs((m) => [...m, { from: "user", text }]);
     setInput("");
     setTyping(true);
-    setTimeout(() => { setMsgs((m) => [...m, { from: "bot", text: answer(text) }]); setTyping(false); }, 650);
+    const reply = await streamChat(text, history, (partial) => {
+      setTyping(false);
+      setMsgs((m) => (m[m.length - 1]?.streaming ? [...m.slice(0, -1), { from: "bot", text: partial, streaming: true }] : [...m, { from: "bot", text: partial, streaming: true }]));
+    });
+    setTyping(false);
+    setMsgs((m) => {
+      const base = m[m.length - 1]?.streaming ? m.slice(0, -1) : m;
+      return [...base, { from: "bot", text: reply || answer(text) }];
+    });
   };
 
   return (
@@ -46,7 +56,7 @@ export const ChatWidget = () => {
             <div className="px-5 py-4 border-b border-[#111113] flex items-center justify-between">
               <div>
                 <p className="f-serif text-xl">Ask my resume</p>
-                <p className="meta !text-[11px]">Answers from resume data · no AI key</p>
+                <p className="meta !text-[11px]">AI answers from resume data</p>
               </div>
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
             </div>

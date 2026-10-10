@@ -1,4 +1,6 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
+from emergentintegrations.llm.chat import LlmChat, UserMessage, TextDelta, StreamDone
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -65,6 +67,44 @@ async def get_status_checks():
             check['timestamp'] = datetime.fromisoformat(check['timestamp'])
     
     return status_checks
+
+RESUME_TEXT = (ROOT_DIR.parent / "frontend" / "public" / "llms.txt").read_text()
+SYSTEM_PROMPT = (
+    "You are the resume assistant on Siddharth Palnitkar's personal website. Answer visitors' questions about him "
+    "in a friendly, concise way (2-4 sentences), in the third person, using ONLY the resume below. If something is "
+    "not in the resume, say so and suggest emailing him. Never invent facts. Never share a phone number or home address. "
+    "Politely decline unrelated requests.\n\nRESUME:\n" + RESUME_TEXT
+)
+
+
+class ChatTurn(BaseModel):
+    role: str
+    text: str = Field(max_length=1000)
+
+
+class ChatRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=500)
+    history: List[ChatTurn] = Field(default_factory=list, max_length=12)
+
+
+@api_router.post("/chat")
+async def chat(req: ChatRequest):
+    key = os.environ.get("EMERGENT_LLM_KEY")
+    if not key:
+        raise HTTPException(503, "AI chat not configured")
+    convo = "\n".join(f"{'Visitor' if t.role == 'user' else 'Assistant'}: {t.text}" for t in req.history[-6:])
+    prompt = (f"Conversation so far:\n{convo}\n\n" if convo else "") + f"Visitor: {req.message}"
+    llm = LlmChat(api_key=key, session_id=str(uuid.uuid4()), system_message=SYSTEM_PROMPT).with_model("openai", "gpt-5.6-terra")
+
+    async def gen():
+        async for ev in llm.stream_message(UserMessage(text=prompt)):
+            if isinstance(ev, TextDelta):
+                yield ev.content
+            elif isinstance(ev, StreamDone):
+                break
+
+    return StreamingResponse(gen(), media_type="text/plain; charset=utf-8",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
 # Include the router in the main app
 app.include_router(api_router)

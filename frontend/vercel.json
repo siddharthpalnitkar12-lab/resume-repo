@@ -2,5 +2,8 @@
   "framework": "create-react-app",
   "installCommand": "yarn install",
   "buildCommand": "CI=false yarn build",
-  "outputDirectory": "build"
+  "outputDirectory": "build",
+  "functions": {
+    "api/chat.js": { "includeFiles": "public/llms.txt", "maxDuration": 30 }
+  }
 }
