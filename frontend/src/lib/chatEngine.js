@@ -18,6 +18,7 @@ const intents = [
 ];
 
 export const PITCH_QUESTION = "Why should a recruiter hire Siddharth? Give a short, persuasive pitch.";
+export const rolePitch = (role) => `Why should a recruiter hire Siddharth for the role of "${role}"? Give a short, persuasive pitch tailored to that role, using only facts from his resume.`;
 
 export const suggestions = [
   "Why hire Siddharth?",

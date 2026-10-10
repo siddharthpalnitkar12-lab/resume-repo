@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquareText, X, ArrowUp } from "lucide-react";
-import { answer, suggestions, PITCH_QUESTION } from "@/lib/chatEngine";
+import { answer, suggestions, PITCH_QUESTION, rolePitch } from "@/lib/chatEngine";
 import { streamChat } from "@/lib/aiChat";
 import { CopyPitch } from "@/components/CopyPitch";
 
@@ -30,11 +30,11 @@ export const ChatWidget = () => {
 
   useEffect(() => { endRef.current?.scrollIntoView({ block: "end" }); }, [msgs, typing]);
 
-  const ask = async (q) => {
+  const ask = async (q, role) => {
     const text = q.trim();
     if (!text || typing) return;
     const history = msgs.slice(1).filter((m) => m.from !== "note").map((m) => ({ role: m.from === "user" ? "user" : "assistant", text: m.text }));
-    setMsgs((m) => [...m, { from: "user", text }]);
+    setMsgs((m) => [...m, { from: "user", text: role ? `Tailor the pitch for: ${role}` : text }]);
     setInput("");
     setTyping(true);
     const { text: reply, retryMin } = await streamChat(text, history, (partial) => {
@@ -44,7 +44,7 @@ export const ChatWidget = () => {
     setTyping(false);
     setMsgs((m) => {
       const base = m[m.length - 1]?.streaming ? m.slice(0, -1) : m;
-      const out = [...base, { from: "bot", text: reply || answer(text), pitch: isPitch(text) }];
+      const out = [...base, { from: "bot", text: reply || answer(text), pitch: isPitch(text), role }];
       return retryMin && !m.some((x) => x.from === "note") ? [...out, { from: "note", text: `You've reached the hourly limit for AI answers, so I'm showing quick answers from the resume. AI answers return in about ${retryMin} min.` }] : out;
     });
   };
@@ -77,7 +77,7 @@ export const ChatWidget = () => {
                   className={`max-w-[85%] text-sm leading-relaxed px-4 py-3 ${m.from === "user" ? "ml-auto bg-ink text-[#FBF9F5]" : m.from === "note" ? "max-w-full border border-dashed border-[#B83A24] text-[#942C1B] text-xs" : "bg-[#EFEAE0]"}`}
                   data-testid={`chat-message-${m.from}`}>
                   {m.text}
-                  {m.pitch && <CopyPitch text={m.text} />}
+                  {m.pitch && <CopyPitch text={m.text} role={m.role} id={i} onTailor={(role) => ask(rolePitch(role), role)} />}
                 </motion.div>
               ))}
               {typing && <div className="dot-blink bg-[#EFEAE0] w-16 px-4 py-3 flex gap-1" data-testid="chat-typing"><span>●</span><span>●</span><span>●</span></div>}
